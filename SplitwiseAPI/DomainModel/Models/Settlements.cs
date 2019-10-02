@@ -10,7 +10,7 @@ namespace SplitwiseAPI.DomainModel.Models
     {
         public int Id { get; set; }
 
-        public int GroupId { get; set; }
+        public int? GroupId { get; set; }
         [ForeignKey("GroupId")]
         public Groups Group { get; set; }
 

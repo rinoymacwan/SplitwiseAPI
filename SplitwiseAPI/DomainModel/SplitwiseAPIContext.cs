@@ -31,5 +31,7 @@ namespace SplitwiseAPI.Models
         public DbSet<SplitwiseAPI.DomainModel.Models.Groups> Groups { get; set; }
 
         public DbSet<SplitwiseAPI.DomainModel.Models.GroupMemberMappings> GroupMemberMappings { get; set; }
+
+        public DbSet<SplitwiseAPI.DomainModel.Models.Settlements> Settlements { get; set; }
     }
 }
