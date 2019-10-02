@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SplitwiseAPI.Data
+namespace SplitwiseAPI.DomainModel.Models
 {
-    public class Payees
+    public class Payers
     {
         public int Id { get; set; }
 
@@ -14,10 +14,11 @@ namespace SplitwiseAPI.Data
         [ForeignKey("ExpenseId")]
         public Expenses Expense { get; set; }
 
-        public int PayeeId { get; set; }
-        [ForeignKey("PayeeId")]
+        public int PayerId { get; set; }
+        [ForeignKey("PayerId")]
         public Users User { get; set; }
 
-        public int PayeeShare { get; set; }
+        public int AmountPaid { get; set; }
+        public int PayerShare { get; set; }
     }
 }
