@@ -27,5 +27,9 @@ namespace SplitwiseAPI.Models
 
             base.OnModelCreating(modelbuilder);
         }
+
+        public DbSet<SplitwiseAPI.DomainModel.Models.Groups> Groups { get; set; }
+
+        public DbSet<SplitwiseAPI.DomainModel.Models.GroupMemberMappings> GroupMemberMappings { get; set; }
     }
 }
