@@ -29,6 +29,13 @@ namespace SplitwiseAPI.Controllers
             return _context.Users;
         }
 
+        // GET: api/Users/Friends
+        [HttpGet("{id}/friends")]
+        public IEnumerable<Users> GetAllFriends([FromRoute] int id)
+        {
+            return _context.UserFriendMappings.Where(u => u.UserId == id).Select(x => x.Friend);
+        }
+
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUsers([FromRoute] int id)

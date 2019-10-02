@@ -90,8 +90,9 @@ namespace SplitwiseAPI.Controllers.ApiControllers
             {
                 return BadRequest(ModelState);
             }
-
+            UserFriendMappings otherEntry = new UserFriendMappings() { UserId = userFriendMappings.FriendId, FriendId = userFriendMappings.UserId };
             _context.UserFriendMappings.Add(userFriendMappings);
+            _context.UserFriendMappings.Add(otherEntry);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUserFriendMappings", new { id = userFriendMappings.Id }, userFriendMappings);
@@ -112,7 +113,10 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return NotFound();
             }
 
+            var x =await _context.UserFriendMappings.Where(k => k.UserId == userFriendMappings.FriendId && k.FriendId == userFriendMappings.UserId).FirstOrDefaultAsync();
             _context.UserFriendMappings.Remove(userFriendMappings);
+            _context.UserFriendMappings.Remove(x);
+
             await _context.SaveChangesAsync();
 
             return Ok(userFriendMappings);
