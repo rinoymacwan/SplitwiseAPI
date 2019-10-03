@@ -20,7 +20,7 @@ namespace SplitwiseAPI.DomainModel.Models
 
         public DateTime DateTime { get; set; }
 
-        public string CategoryId { get; set; }
+        public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public Categories Category { get; set; }
             

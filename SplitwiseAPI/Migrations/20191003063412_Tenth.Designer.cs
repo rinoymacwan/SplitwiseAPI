@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SplitwiseAPI.Models;
 
 namespace SplitwiseAPI.Migrations
 {
     [DbContext(typeof(SplitwiseAPIContext))]
-    partial class SplitwiseAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20191003063412_Tenth")]
+    partial class Tenth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,50 +124,6 @@ namespace SplitwiseAPI.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("SplitwiseAPI.DomainModel.Models.Payees", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ExpenseId");
-
-                    b.Property<int>("PayeeId");
-
-                    b.Property<int>("PayeeShare");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExpenseId");
-
-                    b.HasIndex("PayeeId");
-
-                    b.ToTable("Payees");
-                });
-
-            modelBuilder.Entity("SplitwiseAPI.DomainModel.Models.Payers", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AmountPaid");
-
-                    b.Property<int>("ExpenseId");
-
-                    b.Property<int>("PayerId");
-
-                    b.Property<int>("PayerShare");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExpenseId");
-
-                    b.HasIndex("PayerId");
-
-                    b.ToTable("Payers");
-                });
-
             modelBuilder.Entity("SplitwiseAPI.DomainModel.Models.Settlements", b =>
                 {
                     b.Property<int>("Id")
@@ -273,32 +231,6 @@ namespace SplitwiseAPI.Migrations
                     b.HasOne("SplitwiseAPI.DomainModel.Models.Users", "User")
                         .WithMany()
                         .HasForeignKey("MadeById")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("SplitwiseAPI.DomainModel.Models.Payees", b =>
-                {
-                    b.HasOne("SplitwiseAPI.DomainModel.Models.Expenses", "Expense")
-                        .WithMany()
-                        .HasForeignKey("ExpenseId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SplitwiseAPI.DomainModel.Models.Users", "User")
-                        .WithMany()
-                        .HasForeignKey("PayeeId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("SplitwiseAPI.DomainModel.Models.Payers", b =>
-                {
-                    b.HasOne("SplitwiseAPI.DomainModel.Models.Expenses", "Expense")
-                        .WithMany()
-                        .HasForeignKey("ExpenseId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SplitwiseAPI.DomainModel.Models.Users", "User")
-                        .WithMany()
-                        .HasForeignKey("PayerId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

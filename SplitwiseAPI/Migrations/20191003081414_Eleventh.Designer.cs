@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SplitwiseAPI.Models;
 
 namespace SplitwiseAPI.Migrations
 {
     [DbContext(typeof(SplitwiseAPIContext))]
-    partial class SplitwiseAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20191003081414_Eleventh")]
+    partial class Eleventh
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
