@@ -35,5 +35,7 @@ namespace SplitwiseAPI.Models
         public DbSet<SplitwiseAPI.DomainModel.Models.Settlements> Settlements { get; set; }
 
         public DbSet<SplitwiseAPI.DomainModel.Models.Categories> Categories { get; set; }
+
+        public DbSet<SplitwiseAPI.DomainModel.Models.Activities> Activities { get; set; }
     }
 }
