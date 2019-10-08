@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SplitwiseAPI.DomainModel.Models;
 using SplitwiseAPI.Models;
+using SplitwiseAPI.Repository.CategoriesRepository;
 
 namespace SplitwiseAPI.Controllers.ApiControllers
 {
@@ -14,18 +15,18 @@ namespace SplitwiseAPI.Controllers.ApiControllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly SplitwiseAPIContext _context;
+        private readonly ICategoriesRepository _categoriesRepository;
 
-        public CategoriesController(SplitwiseAPIContext context)
+        public CategoriesController(ICategoriesRepository categoriesRepository)
         {
-            _context = context;
+            this._categoriesRepository = categoriesRepository;
         }
 
         // GET: api/Categories
         [HttpGet]
         public IEnumerable<Categories> GetCategories()
         {
-            return _context.Categories;
+            return _categoriesRepository.GetCategories();
         }
 
         // GET: api/Categories/5
@@ -37,7 +38,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var categories = await _context.Categories.FindAsync(id);
+            var categories = await _categoriesRepository.GetCategory(id);
 
             if (categories == null)
             {
@@ -61,11 +62,11 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(categories).State = EntityState.Modified;
+            _categoriesRepository.UpdateCategory(categories);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _categoriesRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -91,8 +92,8 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            _context.Categories.Add(categories);
-            await _context.SaveChangesAsync();
+            _categoriesRepository.CreateCategory(categories);
+            await _categoriesRepository.Save();
 
             return CreatedAtAction("GetCategories", new { id = categories.Id }, categories);
         }
@@ -106,21 +107,21 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var categories = await _context.Categories.FindAsync(id);
+            var categories = await _categoriesRepository.GetCategory(id);
             if (categories == null)
             {
                 return NotFound();
             }
 
-            _context.Categories.Remove(categories);
-            await _context.SaveChangesAsync();
+            await _categoriesRepository.DeleteCategory(categories);
+            await _categoriesRepository.Save();
 
             return Ok(categories);
         }
 
         private bool CategoriesExists(int id)
         {
-            return _context.Categories.Any(e => e.Id == id);
+            return _categoriesRepository.CategoryExists(id);
         }
     }
 }
