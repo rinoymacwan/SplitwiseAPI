@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using SplitwiseAPI.Models;
 using SplitwiseAPI.Repository.UsersRepository;
+using SplitwiseAPI.Repository.UserFriendMappingsRepository;
 
 namespace SplitwiseAPI
 {
@@ -30,6 +31,7 @@ namespace SplitwiseAPI
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IUserFriendMappingsRepository, UserFriendMappingsRepository>();
             services.AddDbContext<SplitwiseAPIContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SplitwiseAPIContext")));
         }

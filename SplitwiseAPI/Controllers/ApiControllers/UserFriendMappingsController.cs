@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SplitwiseAPI.DomainModel.Models;
 using SplitwiseAPI.Models;
+using SplitwiseAPI.Repository.UserFriendMappingsRepository;
+using SplitwiseAPI.Repository.UsersRepository;
 
 namespace SplitwiseAPI.Controllers.ApiControllers
 {
@@ -14,18 +16,18 @@ namespace SplitwiseAPI.Controllers.ApiControllers
     [ApiController]
     public class UserFriendMappingsController : ControllerBase
     {
-        private readonly SplitwiseAPIContext _context;
+        private readonly IUserFriendMappingsRepository _userFriendMappingsRepository;
 
-        public UserFriendMappingsController(SplitwiseAPIContext context)
+        public UserFriendMappingsController(IUserFriendMappingsRepository userFriendMappingsRepository)
         {
-            _context = context;
+            this._userFriendMappingsRepository = userFriendMappingsRepository;
         }
 
         // GET: api/UserFriendMappings
         [HttpGet]
         public IEnumerable<UserFriendMappings> GetUserFriendMappings()
         {
-            return _context.UserFriendMappings;
+            return _userFriendMappingsRepository.GetUserFriendMappings();
         }
 
         // GET: api/UserFriendMappings/5
@@ -37,7 +39,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var userFriendMappings = await _context.UserFriendMappings.FindAsync(id);
+            var userFriendMappings = await _userFriendMappingsRepository.GetUserFriendMapping(id);
 
             if (userFriendMappings == null)
             {
@@ -61,11 +63,11 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(userFriendMappings).State = EntityState.Modified;
+            _userFriendMappingsRepository.UpdateUserFriendMapping(userFriendMappings);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _userFriendMappingsRepository.SaveAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -91,9 +93,9 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
             UserFriendMappings otherEntry = new UserFriendMappings() { UserId = userFriendMappings.FriendId, FriendId = userFriendMappings.UserId };
-            _context.UserFriendMappings.Add(userFriendMappings);
-            _context.UserFriendMappings.Add(otherEntry);
-            await _context.SaveChangesAsync();
+            _userFriendMappingsRepository.CreateUserFriendMapping(userFriendMappings);
+            _userFriendMappingsRepository.CreateUserFriendMapping(otherEntry);
+            await _userFriendMappingsRepository.SaveAsync();
 
             return CreatedAtAction("GetUserFriendMappings", new { id = userFriendMappings.Id }, userFriendMappings);
         }
@@ -107,24 +109,22 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var userFriendMappings = await _context.UserFriendMappings.FindAsync(id);
+            var userFriendMappings = await _userFriendMappingsRepository.GetUserFriendMapping(id);
             if (userFriendMappings == null)
             {
                 return NotFound();
             }
 
-            var x =await _context.UserFriendMappings.Where(k => k.UserId == userFriendMappings.FriendId && k.FriendId == userFriendMappings.UserId).FirstOrDefaultAsync();
-            _context.UserFriendMappings.Remove(userFriendMappings);
-            _context.UserFriendMappings.Remove(x);
+            await _userFriendMappingsRepository.DeleteUserFriendMapping(userFriendMappings);
 
-            await _context.SaveChangesAsync();
+            await _userFriendMappingsRepository.SaveAsync();
 
             return Ok(userFriendMappings);
         }
 
         private bool UserFriendMappingsExists(int id)
         {
-            return _context.UserFriendMappings.Any(e => e.Id == id);
+            return _userFriendMappingsRepository.UserFriendMappingExists(id);
         }
     }
 }

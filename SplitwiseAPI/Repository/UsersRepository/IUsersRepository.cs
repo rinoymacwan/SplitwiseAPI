@@ -13,7 +13,7 @@ namespace SplitwiseAPI.Repository.UsersRepository
         Task<Users> GetUser(int id);
         void CreateUser(Users user); 
         void UpdateUser(Users user);
-        Task<Users> DeleteUser(Users user);
+        Task DeleteUser(Users user);
         Task Save();
         bool UserExists(int id);
     }

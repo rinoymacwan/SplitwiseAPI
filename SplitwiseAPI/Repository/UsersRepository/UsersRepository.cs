@@ -41,10 +41,6 @@ namespace SplitwiseAPI.Repository.UsersRepository
             context.Entry(user).State = EntityState.Modified;
         }
 
-        public void DeleteUser(Users user)
-        {
-            context.Users.Remove(user);
-        }
 
         public async Task Save()
         {
@@ -52,9 +48,9 @@ namespace SplitwiseAPI.Repository.UsersRepository
         }
         
 
-        Task<Users> IUsersRepository.DeleteUser(Users user)
+        async Task IUsersRepository.DeleteUser(Users user)
         {
-            throw new NotImplementedException();
+            context.Users.Remove(user);
         }
 
         public bool UserExists(int id)
@@ -66,5 +62,7 @@ namespace SplitwiseAPI.Repository.UsersRepository
         {
             throw new NotImplementedException();
         }
+
+        
     }
 }
