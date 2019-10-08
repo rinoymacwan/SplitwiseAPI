@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using SplitwiseAPI.Models;
+using SplitwiseAPI.Repository.UsersRepository;
 
 namespace SplitwiseAPI
 {
@@ -28,7 +29,7 @@ namespace SplitwiseAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
+            services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddDbContext<SplitwiseAPIContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SplitwiseAPIContext")));
         }

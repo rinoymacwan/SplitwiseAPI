@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using SplitwiseAPI.DomainModel;
 using SplitwiseAPI.DomainModel.Models;
 using SplitwiseAPI.Models;
+using SplitwiseAPI.Repository.UsersRepository;
 
 namespace SplitwiseAPI.Controllers
 {
@@ -15,25 +16,31 @@ namespace SplitwiseAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly SplitwiseAPIContext _context;
+        private readonly IUsersRepository _usersRepository;
 
-        public UsersController(SplitwiseAPIContext context)
+        //public UsersController()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("AAAAAAAAAAAA");
+        //    this._usersRepository = new UsersRepository(new SplitwiseAPIContext());
+        //}
+        public UsersController(IUsersRepository usersRepository)
         {
-            _context = context;
+            this._usersRepository = usersRepository;
         }
 
         // GET: api/Users
         [HttpGet]
         public IEnumerable<Users> GetUsers()
         {
-            return _context.Users;
+            
+            return _usersRepository.GetUsers();
         }
 
         // GET: api/Users/Friends
         [HttpGet("{id}/friends")]
         public IEnumerable<Users> GetAllFriends([FromRoute] int id)
         {
-            return _context.UserFriendMappings.Where(u => u.UserId == id).Select(x => x.Friend);
+            return _usersRepository.GetAllFriends(id);
         }
 
         // GET: api/Users/5
@@ -45,7 +52,7 @@ namespace SplitwiseAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var users = await _context.Users.FindAsync(id);
+            var users = await _usersRepository.GetUser(id);
 
             if (users == null)
             {
@@ -69,11 +76,11 @@ namespace SplitwiseAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(users).State = EntityState.Modified;
+            _usersRepository.UpdateUser(users);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _usersRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -99,8 +106,8 @@ namespace SplitwiseAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.Users.Add(users);
-            await _context.SaveChangesAsync();
+            _usersRepository.CreateUser(users);
+            await _usersRepository.Save();
 
             return CreatedAtAction("GetUsers", new { id = users.Id }, users);
         }
@@ -114,21 +121,20 @@ namespace SplitwiseAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var users = await _context.Users.FindAsync(id);
+            var users = await _usersRepository.GetUser(id);
             if (users == null)
             {
                 return NotFound();
             }
-
-            _context.Users.Remove(users);
-            await _context.SaveChangesAsync();
+            await _usersRepository.DeleteUser(users);
+            await _usersRepository.Save();
 
             return Ok(users);
         }
 
         private bool UsersExists(int id)
         {
-            return _context.Users.Any(e => e.Id == id);
+            return _usersRepository.UserExists(id);
         }
     }
 }

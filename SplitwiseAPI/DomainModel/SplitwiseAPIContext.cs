@@ -14,6 +14,10 @@ namespace SplitwiseAPI.Models
         {
         }
 
+        public SplitwiseAPIContext()
+        {
+        }
+
         public DbSet<SplitwiseAPI.DomainModel.Models.Users> Users { get; set; }
 
         public DbSet<SplitwiseAPI.DomainModel.Models.UserFriendMappings> UserFriendMappings { get; set; }
