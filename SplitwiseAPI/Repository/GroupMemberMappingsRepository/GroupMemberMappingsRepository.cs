@@ -24,6 +24,7 @@ namespace SplitwiseAPI.Repository.GroupMemberMappingsRepository
         public async Task CreateGroupMemberMapping(GroupMemberMappings GroupMemberMapping)
         {
             context.GroupMemberMappings.Add(GroupMemberMapping);
+            await Save();
         }
 
         public async Task DeleteGroupMemberMapping(GroupMemberMappings GroupMemberMapping)
@@ -38,7 +39,7 @@ namespace SplitwiseAPI.Repository.GroupMemberMappingsRepository
 
         public IEnumerable<GroupMemberMappings> GetGroupMemberMappings()
         {
-            return context.GroupMemberMappings;
+            return context.GroupMemberMappings.Include(k => k.User);
         }
 
         public Task<GroupMemberMappings> GetGroupMemberMapping(int id)

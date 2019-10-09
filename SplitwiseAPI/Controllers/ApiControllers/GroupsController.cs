@@ -50,6 +50,8 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return NotFound();
             }
             var members = _groupMemberMappingsRepository.GetGroupMemberMappings().Where(g => g.GroupId == id).Select(k => k.User).ToList();
+            var members1 = _groupMemberMappingsRepository.GetGroupMemberMappings().ToList(); ;
+            System.Diagnostics.Debug.WriteLine("XXXXXXXXXXXXXXXX: " + members1[2].User.Name);
             GroupAndMembers GAM = new GroupAndMembers() { Group = groups, Members = members };
             //_userFriendMappingsRepository.GetUserFriendMappings().Where(u => u.UserId == id).Select(x => x.Friend);
 

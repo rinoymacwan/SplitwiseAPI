@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SplitwiseAPI.DomainModel.Models;
 using SplitwiseAPI.Models;
+using SplitwiseAPI.Repository.ExpensesRepository;
 
 namespace SplitwiseAPI.Controllers.ApiControllers
 {
@@ -14,18 +15,18 @@ namespace SplitwiseAPI.Controllers.ApiControllers
     [ApiController]
     public class ExpensesController : ControllerBase
     {
-        private readonly SplitwiseAPIContext _context;
+        private readonly IExpensesRepository _expensesRepository;
 
-        public ExpensesController(SplitwiseAPIContext context)
+        public ExpensesController(IExpensesRepository expensesRepository)
         {
-            _context = context;
+            this._expensesRepository = expensesRepository;
         }
 
         // GET: api/Expenses
         [HttpGet]
         public IEnumerable<Expenses> GetExpenses()
         {
-            return _context.Expenses;
+            return _expensesRepository.GetExpenses();
         }
 
         // GET: api/Expenses/5
@@ -37,7 +38,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var expenses = await _context.Expenses.FindAsync(id);
+            var expenses = await _expensesRepository.GetExpense(id);
 
             if (expenses == null)
             {
@@ -61,11 +62,11 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(expenses).State = EntityState.Modified;
+            _expensesRepository.UpdateExpense(expenses);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _expensesRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -91,8 +92,8 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            _context.Expenses.Add(expenses);
-            await _context.SaveChangesAsync();
+            _expensesRepository.CreateExpense(expenses);
+            await _expensesRepository.Save();
 
             return CreatedAtAction("GetExpenses", new { id = expenses.Id }, expenses);
         }
@@ -106,21 +107,21 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var expenses = await _context.Expenses.FindAsync(id);
+            var expenses = await _expensesRepository.GetExpense(id);
             if (expenses == null)
             {
                 return NotFound();
             }
 
-            _context.Expenses.Remove(expenses);
-            await _context.SaveChangesAsync();
+            await _expensesRepository.DeleteExpense(expenses);
+            await _expensesRepository.Save();
 
             return Ok(expenses);
         }
 
         private bool ExpensesExists(int id)
         {
-            return _context.Expenses.Any(e => e.Id == id);
+            return _expensesRepository.ExpenseExists(id);
         }
     }
 }
