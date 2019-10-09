@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SplitwiseAPI.DomainModel.Models;
 using SplitwiseAPI.Models;
+using SplitwiseAPI.Repository.GroupMemberMappingsRepository;
+using SplitwiseAPI.Repository.GroupsRepository;
+using SplitwiseAPI.Repository.UserFriendMappingsRepository;
 
 namespace SplitwiseAPI.Controllers.ApiControllers
 {
@@ -14,18 +17,21 @@ namespace SplitwiseAPI.Controllers.ApiControllers
     [ApiController]
     public class GroupsController : ControllerBase
     {
-        private readonly SplitwiseAPIContext _context;
-
-        public GroupsController(SplitwiseAPIContext context)
+        private readonly IGroupsRepository _groupsRepository;
+        private readonly IGroupMemberMappingsRepository _groupMemberMappingsRepository;
+        private readonly IUserFriendMappingsRepository _userFriendMappingsRepository;
+        public GroupsController(IGroupsRepository groupsRepository, IGroupMemberMappingsRepository groupMemberMappingsRepository, IUserFriendMappingsRepository userFriendMappingsRepository)
         {
-            _context = context;
+            this._groupsRepository = groupsRepository;
+            this._groupMemberMappingsRepository = groupMemberMappingsRepository;
+            this._userFriendMappingsRepository = userFriendMappingsRepository;
         }
 
         // GET: api/Groups
         [HttpGet]
         public IEnumerable<Groups> GetGroups()
         {
-            return _context.Groups;
+            return _groupsRepository.GetGroups();
         }
 
         // GET: api/Groups/5
@@ -37,15 +43,15 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var groups = await _context.Groups.Include(u => u.User).FirstOrDefaultAsync(i => i.Id == id);
+            var groups = await _groupsRepository.GetGroup(id);
             
             if (groups == null)
             {
                 return NotFound();
             }
-            var members = await _context.GroupMemberMappings.Where(g => g.GroupId == id).Select(k => k.User).ToListAsync();
+            var members = _groupMemberMappingsRepository.GetGroupMemberMappings().Where(g => g.GroupId == id).Select(k => k.User).ToList();
             GroupAndMembers GAM = new GroupAndMembers() { Group = groups, Members = members };
-            _context.UserFriendMappings.Where(u => u.UserId == id).Select(x => x.Friend);
+            //_userFriendMappingsRepository.GetUserFriendMappings().Where(u => u.UserId == id).Select(x => x.Friend);
 
             return Ok(GAM);
         }
@@ -66,7 +72,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
             //{
             //    return NotFound();
             //}
-            var groups = await _context.GroupMemberMappings.Where(g => g.MemberId == id).Select(k => k.Group).ToListAsync();
+            var groups = _groupMemberMappingsRepository.GetGroupMemberMappings().Where(g => g.MemberId == id).Select(k => k.Group);
             //GroupAndMembers GAM = new GroupAndMembers() { Group = groups, Members = members };
             //_context.UserFriendMappings.Where(u => u.UserId == id).Select(x => x.Friend);
 
@@ -87,11 +93,11 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(groups).State = EntityState.Modified;
+            _groupsRepository.UpdateGroup(groups);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _groupsRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -117,8 +123,8 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            _context.Groups.Add(groups);
-            await _context.SaveChangesAsync();
+            _groupsRepository.CreateGroup(groups);
+            await _groupsRepository.Save();
 
             return CreatedAtAction("GetGroups", new { id = groups.Id }, groups);
         }
@@ -132,21 +138,21 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var groups = await _context.Groups.FindAsync(id);
+            var groups = await _groupsRepository.GetGroup(id);
             if (groups == null)
             {
                 return NotFound();
             }
 
-            _context.Groups.Remove(groups);
-            await _context.SaveChangesAsync();
+            await _groupsRepository.DeleteGroup(groups);
+            await _groupsRepository.Save();
 
             return Ok(groups);
         }
 
         private bool GroupsExists(int id)
         {
-            return _context.Groups.Any(e => e.Id == id);
+            return _groupsRepository.GroupExists(id);
         }
     }
 }

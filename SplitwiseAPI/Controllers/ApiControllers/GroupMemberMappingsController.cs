@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SplitwiseAPI.DomainModel.Models;
 using SplitwiseAPI.Models;
+using SplitwiseAPI.Repository.GroupMemberMappingsRepository;
 
 namespace SplitwiseAPI.Controllers.ApiControllers
 {
@@ -14,18 +15,18 @@ namespace SplitwiseAPI.Controllers.ApiControllers
     [ApiController]
     public class GroupMemberMappingsController : ControllerBase
     {
-        private readonly SplitwiseAPIContext _context;
+        private readonly IGroupMemberMappingsRepository _groupMemberMappingsRepository;
 
-        public GroupMemberMappingsController(SplitwiseAPIContext context)
+        public GroupMemberMappingsController(IGroupMemberMappingsRepository groupMemberMappingsRepository)
         {
-            _context = context;
+            this._groupMemberMappingsRepository = groupMemberMappingsRepository;
         }
 
         // GET: api/GroupMemberMappings
         [HttpGet]
         public IEnumerable<GroupMemberMappings> GetGroupMemberMappings()
         {
-            return _context.GroupMemberMappings;
+            return _groupMemberMappingsRepository.GetGroupMemberMappings();
         }
         // GET: api/GroupMemberMappings/5
         [HttpGet("{id}")]
@@ -36,7 +37,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var groupMemberMappings = await _context.GroupMemberMappings.FindAsync(id);
+            var groupMemberMappings = await _groupMemberMappingsRepository.GetGroupMemberMapping(id);
 
             if (groupMemberMappings == null)
             {
@@ -60,11 +61,11 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(groupMemberMappings).State = EntityState.Modified;
+            _groupMemberMappingsRepository.UpdateGroupMemberMapping(groupMemberMappings);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _groupMemberMappingsRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -90,8 +91,8 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            _context.GroupMemberMappings.Add(groupMemberMappings);
-            await _context.SaveChangesAsync();
+            await _groupMemberMappingsRepository.CreateGroupMemberMapping(groupMemberMappings);
+            await _groupMemberMappingsRepository.Save();
 
             return CreatedAtAction("GetGroupMemberMappings", new { id = groupMemberMappings.Id }, groupMemberMappings);
         }
@@ -105,21 +106,21 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var groupMemberMappings = await _context.GroupMemberMappings.FindAsync(id);
+            var groupMemberMappings = await _groupMemberMappingsRepository.GetGroupMemberMapping(id);
             if (groupMemberMappings == null)
             {
                 return NotFound();
             }
 
-            _context.GroupMemberMappings.Remove(groupMemberMappings);
-            await _context.SaveChangesAsync();
+            await _groupMemberMappingsRepository.DeleteGroupMemberMapping(groupMemberMappings);
+            await _groupMemberMappingsRepository.Save();
 
             return Ok(groupMemberMappings);
         }
 
         private bool GroupMemberMappingsExists(int id)
         {
-            return _context.GroupMemberMappings.Any(e => e.Id == id);
+            return _groupMemberMappingsRepository.GroupMemberMappingExists(id);
         }
     }
 }

@@ -16,6 +16,8 @@ using SplitwiseAPI.Repository.UsersRepository;
 using SplitwiseAPI.Repository.UserFriendMappingsRepository;
 using SplitwiseAPI.Repository.CategoriesRepository;
 using SplitwiseAPI.Repository.ActivitiesRepository;
+using SplitwiseAPI.Repository.GroupsRepository;
+using SplitwiseAPI.Repository.GroupMemberMappingsRepository;
 
 namespace SplitwiseAPI
 {
@@ -36,6 +38,8 @@ namespace SplitwiseAPI
             services.AddScoped<IUserFriendMappingsRepository, UserFriendMappingsRepository>();
             services.AddScoped<ICategoriesRepository, CategoriesRepository>();
             services.AddScoped<IActivitiesRepository, ActivitiesRepository>();
+            services.AddScoped<IGroupsRepository, GroupsRepository>();
+            services.AddScoped<IGroupMemberMappingsRepository, GroupMemberMappingsRepository>();
             services.AddDbContext<SplitwiseAPIContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SplitwiseAPIContext")));
         }
