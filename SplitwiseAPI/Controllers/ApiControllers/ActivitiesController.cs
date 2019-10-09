@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SplitwiseAPI.DomainModel.Models;
 using SplitwiseAPI.Models;
+using SplitwiseAPI.Repository.ActivitiesRepository;
 
 namespace SplitwiseAPI.Controllers.ApiControllers
 {
@@ -14,18 +15,18 @@ namespace SplitwiseAPI.Controllers.ApiControllers
     [ApiController]
     public class ActivitiesController : ControllerBase
     {
-        private readonly SplitwiseAPIContext _context;
+        private readonly IActivitiesRepository _activitiesRepository;
 
-        public ActivitiesController(SplitwiseAPIContext context)
+        public ActivitiesController(IActivitiesRepository activitiesRepository)
         {
-            _context = context;
+            _activitiesRepository = activitiesRepository;
         }
 
         // GET: api/Activities
         [HttpGet]
         public IEnumerable<Activities> GetActivities()
         {
-            return _context.Activities;
+            return _activitiesRepository.GetActivities();
         }
 
         // GET: api/Activities/5
@@ -37,7 +38,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var activities = await _context.Activities.FindAsync(id);
+            var activities = await _activitiesRepository.GetActivity(id);
 
             if (activities == null)
             {
@@ -61,11 +62,11 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(activities).State = EntityState.Modified;
+            _activitiesRepository.UpdateActivity(activities);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _activitiesRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -91,8 +92,8 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            _context.Activities.Add(activities);
-            await _context.SaveChangesAsync();
+            _activitiesRepository.CreateActivity(activities);
+            await _activitiesRepository.Save();
 
             return CreatedAtAction("GetActivities", new { id = activities.Id }, activities);
         }
@@ -106,21 +107,21 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var activities = await _context.Activities.FindAsync(id);
+            var activities = await _activitiesRepository.GetActivity(id);
             if (activities == null)
             {
                 return NotFound();
             }
 
-            _context.Activities.Remove(activities);
-            await _context.SaveChangesAsync();
+            await _activitiesRepository.DeleteActivity(activities);
+            await _activitiesRepository.Save();
 
             return Ok(activities);
         }
 
         private bool ActivitiesExists(int id)
         {
-            return _context.Activities.Any(e => e.Id == id);
+            return _activitiesRepository.ActivityExists(id);
         }
     }
 }

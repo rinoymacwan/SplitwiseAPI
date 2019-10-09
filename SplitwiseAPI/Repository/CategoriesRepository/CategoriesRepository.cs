@@ -28,7 +28,7 @@ namespace SplitwiseAPI.Repository.CategoriesRepository
 
         public async Task DeleteCategory(Categories Category)
         {
-            context.Categories.Remove(Category);
+            context.Categories.Add(Category);
         }
 
         public void Dispose()
