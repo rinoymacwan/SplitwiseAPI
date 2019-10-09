@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SplitwiseAPI.DomainModel.Models;
 using SplitwiseAPI.Models;
+using SplitwiseAPI.Repository.SettlementsRepository;
 
 namespace SplitwiseAPI.Controllers.ApiControllers
 {
@@ -14,18 +15,18 @@ namespace SplitwiseAPI.Controllers.ApiControllers
     [ApiController]
     public class SettlementsController : ControllerBase
     {
-        private readonly SplitwiseAPIContext _context;
+        private readonly ISettlementsRepository _settlementsRepository;
 
-        public SettlementsController(SplitwiseAPIContext context)
+        public SettlementsController(ISettlementsRepository settlementsRepository)
         {
-            _context = context;
+            this._settlementsRepository = settlementsRepository;
         }
 
         // GET: api/Settlements
         [HttpGet]
         public IEnumerable<Settlements> GetSettlements()
         {
-            return _context.Settlements;
+            return _settlementsRepository.GetSettlements();
         }
 
         // GET: api/Settlements/GetByUserId
@@ -37,7 +38,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var settlements = await _context.Settlements.Where(s => s.PayeeId == id || s.PayerId == id).ToListAsync();
+            var settlements = _settlementsRepository.GetSettlements().Where(s => s.PayeeId == id || s.PayerId == id).ToList();
 
             if (settlements == null)
             {
@@ -56,7 +57,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var settlements = await _context.Settlements.Where(s => s.GroupId == id).ToListAsync();
+            var settlements = _settlementsRepository.GetSettlements().Where(s => s.GroupId == id).ToList();
 
             if (settlements == null)
             {
@@ -75,7 +76,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var settlements = await _context.Settlements.FindAsync(id);
+            var settlements = await _settlementsRepository.GetSettlement(id);
 
             if (settlements == null)
             {
@@ -99,11 +100,11 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(settlements).State = EntityState.Modified;
+            _settlementsRepository.UpdateSettlement(settlements);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _settlementsRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -129,8 +130,8 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            _context.Settlements.Add(settlements);
-            await _context.SaveChangesAsync();
+            _settlementsRepository.CreateSettlement(settlements);
+            await _settlementsRepository.Save();
 
             return CreatedAtAction("GetSettlements", new { id = settlements.Id }, settlements);
         }
@@ -144,21 +145,21 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var settlements = await _context.Settlements.FindAsync(id);
+            var settlements = await _settlementsRepository.GetSettlement(id);
             if (settlements == null)
             {
                 return NotFound();
             }
 
-            _context.Settlements.Remove(settlements);
-            await _context.SaveChangesAsync();
+            await _settlementsRepository.DeleteSettlement(settlements);
+            await _settlementsRepository.Save();
 
             return Ok(settlements);
         }
 
         private bool SettlementsExists(int id)
         {
-            return _context.Settlements.Any(e => e.Id == id);
+            return _settlementsRepository.SettlementExists(id);
         }
     }
 }

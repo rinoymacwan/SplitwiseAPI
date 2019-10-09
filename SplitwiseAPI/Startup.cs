@@ -19,6 +19,9 @@ using SplitwiseAPI.Repository.ActivitiesRepository;
 using SplitwiseAPI.Repository.GroupsRepository;
 using SplitwiseAPI.Repository.GroupMemberMappingsRepository;
 using SplitwiseAPI.Repository.ExpensesRepository;
+using SplitwiseAPI.Repository.SettlementsRepository;
+using SplitwiseAPI.Repository.PayersRepository;
+using SplitwiseAPI.Repository.PayeesRepository;
 
 namespace SplitwiseAPI
 {
@@ -42,6 +45,9 @@ namespace SplitwiseAPI
             services.AddScoped<IGroupsRepository, GroupsRepository>();
             services.AddScoped<IGroupMemberMappingsRepository, GroupMemberMappingsRepository>();
             services.AddScoped<IExpensesRepository, ExpensesRepository>();
+            services.AddScoped<ISettlementsRepository, SettlementsRepository>();
+            services.AddScoped<IPayersRepository, PayersRepository>();
+            services.AddScoped<IPayeesRepository, PayeesRepository>();
             services.AddDbContext<SplitwiseAPIContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SplitwiseAPIContext")));
         }

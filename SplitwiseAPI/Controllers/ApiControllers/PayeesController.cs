@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SplitwiseAPI.DomainModel.Models;
 using SplitwiseAPI.Models;
+using SplitwiseAPI.Repository.PayeesRepository;
 
 namespace SplitwiseAPI.Controllers.ApiControllers
 {
@@ -14,18 +15,18 @@ namespace SplitwiseAPI.Controllers.ApiControllers
     [ApiController]
     public class PayeesController : ControllerBase
     {
-        private readonly SplitwiseAPIContext _context;
+        private readonly IPayeesRepository _payeesRepository;
 
-        public PayeesController(SplitwiseAPIContext context)
+        public PayeesController(IPayeesRepository payeesRepository)
         {
-            _context = context;
+            this._payeesRepository = payeesRepository;
         }
 
         // GET: api/Payees
         [HttpGet]
         public IEnumerable<Payees> GetPayees()
         {
-            return _context.Payees;
+            return _payeesRepository.GetPayees();
         }
 
         // GET: api/Payees/5
@@ -37,7 +38,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var payees = await _context.Payees.FindAsync(id);
+            var payees = await _payeesRepository.GetPayee(id);
 
             if (payees == null)
             {
@@ -56,7 +57,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var payees = await _context.Payees.Where(e => e.ExpenseId == id).ToListAsync();
+            var payees = _payeesRepository.GetPayees().Where(e => e.ExpenseId == id).ToList();
 
             if (payees == null)
             {
@@ -80,11 +81,11 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(payees).State = EntityState.Modified;
+            _payeesRepository.UpdatePayee(payees);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _payeesRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -110,8 +111,8 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            _context.Payees.Add(payees);
-            await _context.SaveChangesAsync();
+            _payeesRepository.CreatePayee(payees);
+            await _payeesRepository.Save();
 
             return CreatedAtAction("GetPayees", new { id = payees.Id }, payees);
         }
@@ -125,21 +126,21 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var payees = await _context.Payees.FindAsync(id);
+            var payees = await _payeesRepository.GetPayee(id);
             if (payees == null)
             {
                 return NotFound();
             }
 
-            _context.Payees.Remove(payees);
-            await _context.SaveChangesAsync();
+            _payeesRepository.DeletePayee(payees);
+            await _payeesRepository.Save();
 
             return Ok(payees);
         }
 
         private bool PayeesExists(int id)
         {
-            return _context.Payees.Any(e => e.Id == id);
+            return _payeesRepository.PayeeExists(id);
         }
     }
 }
