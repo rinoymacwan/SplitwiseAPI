@@ -74,7 +74,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
             //{
             //    return NotFound();
             //}
-            var groups = _groupMemberMappingsRepository.GetGroupMemberMappings().Where(g => g.MemberId == id).Select(k => k.Group);
+            var groups = _groupMemberMappingsRepository.GetGroupMemberMappings().Where(g => g.MemberId == id).Select(k => k.Group).ToList();
             //GroupAndMembers GAM = new GroupAndMembers() { Group = groups, Members = members };
             //_context.UserFriendMappings.Where(u => u.UserId == id).Select(x => x.Friend);
 

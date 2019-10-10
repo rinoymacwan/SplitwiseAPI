@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,12 @@ namespace SplitwiseAPI.Controllers.ApiControllers
         public IEnumerable<Activities> GetActivities()
         {
             return _activitiesRepository.GetActivities();
+        }
+        [HttpGet("ByUserId/{id}")]
+        public IEnumerable<Activities> GetActivitiesByUserId([FromRoute] int id)
+        {
+            //Thread.Sleep(TimeSpan.FromSeconds(5));
+            return _activitiesRepository.GetActivities().Where(k =>k.UserId==id);
         }
 
         // GET: api/Activities/5

@@ -39,7 +39,7 @@ namespace SplitwiseAPI.Repository.GroupMemberMappingsRepository
 
         public IEnumerable<GroupMemberMappings> GetGroupMemberMappings()
         {
-            return context.GroupMemberMappings.Include(k => k.User);
+            return context.GroupMemberMappings.Include(k => k.User).Include(l => l.Group);
         }
 
         public Task<GroupMemberMappings> GetGroupMemberMapping(int id)
