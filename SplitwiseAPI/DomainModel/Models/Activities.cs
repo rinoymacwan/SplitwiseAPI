@@ -15,6 +15,6 @@ namespace SplitwiseAPI.DomainModel.Models
         public Users User { get; set; }
 
         public string Description { get; set; }
-        public string Notes { get; set; }
+        public DateTime DateTime { get; set; }
     }
 }
