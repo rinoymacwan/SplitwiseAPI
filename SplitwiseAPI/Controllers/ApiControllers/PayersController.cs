@@ -66,6 +66,26 @@ namespace SplitwiseAPI.Controllers.ApiControllers
 
             return Ok(payers);
         }
+
+        // GET: api/Payers/ByPayerId/id
+        [HttpGet("ByPayerId/{id}")]
+        public async Task<IActionResult> GetPayersByPayerId([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var payers = _payersRepository.GetPayers().Where(e => e.PayerId == id).ToList();
+
+            if (payers == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(payers);
+        }
+
         // PUT: api/Payers/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPayers([FromRoute] int id, [FromBody] Payers payers)

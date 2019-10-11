@@ -28,7 +28,7 @@ namespace SplitwiseAPI.Repository.PayersRepository
 
         public async Task DeletePayer(Payers Payer)
         {
-            context.Payers.Add(Payer);
+            context.Payers.Remove(Payer);
         }
 
         public void Dispose()
@@ -38,7 +38,7 @@ namespace SplitwiseAPI.Repository.PayersRepository
 
         public IEnumerable<Payers> GetPayers()
         {
-            return context.Payers;
+            return context.Payers.Include(t => t.User);
         }
 
         public Task<Payers> GetPayer(int id)

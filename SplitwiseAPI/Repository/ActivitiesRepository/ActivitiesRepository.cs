@@ -28,7 +28,7 @@ namespace SplitwiseAPI.Repository.ActivitiesRepository
 
         public async Task DeleteActivity(Activities Activity)
         {
-            context.Activities.Add(Activity);
+            context.Activities.Remove(Activity);
         }
 
         public void Dispose()

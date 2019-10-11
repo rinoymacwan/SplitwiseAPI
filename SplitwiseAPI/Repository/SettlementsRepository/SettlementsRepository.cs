@@ -28,7 +28,7 @@ namespace SplitwiseAPI.Repository.SettlementsRepository
 
         public async Task DeleteSettlement(Settlements Settlement)
         {
-            context.Settlements.Add(Settlement);
+            context.Settlements.Remove(Settlement);
         }
 
         public void Dispose()

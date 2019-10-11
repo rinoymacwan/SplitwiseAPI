@@ -29,7 +29,7 @@ namespace SplitwiseAPI.Repository.GroupMemberMappingsRepository
 
         public async Task DeleteGroupMemberMapping(GroupMemberMappings GroupMemberMapping)
         {
-            context.GroupMemberMappings.Add(GroupMemberMapping);
+            context.GroupMemberMappings.Remove(GroupMemberMapping);
         }
 
         public void Dispose()

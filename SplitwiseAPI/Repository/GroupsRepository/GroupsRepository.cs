@@ -27,7 +27,7 @@ namespace SplitwiseAPI.Repository.GroupsRepository
 
         public async Task DeleteGroup(Groups Group)
         {
-            context.Groups.Add(Group);
+            context.Groups.Remove(Group);
         }
 
         public void Dispose()

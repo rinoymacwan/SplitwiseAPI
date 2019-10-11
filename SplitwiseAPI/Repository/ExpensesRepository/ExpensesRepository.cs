@@ -28,7 +28,7 @@ namespace SplitwiseAPI.Repository.ExpensesRepository
 
         public async Task DeleteExpense(Expenses Expense)
         {
-            context.Expenses.Add(Expense);
+            context.Expenses.Remove(Expense);
         }
 
         public void Dispose()

@@ -67,6 +67,25 @@ namespace SplitwiseAPI.Controllers.ApiControllers
             return Ok(payees);
         }
 
+        // GET: api/Payees/ByExpenseId/id
+        [HttpGet("ByPayeeId/{id}")]
+        public async Task<IActionResult> GetPayeesByPayeeId([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var payees = _payeesRepository.GetPayees().Where(e => e.PayeeId == id).ToList();
+
+            if (payees == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(payees);
+        }
+
         // PUT: api/Payees/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPayees([FromRoute] int id, [FromBody] Payees payees)
@@ -132,7 +151,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return NotFound();
             }
 
-            _payeesRepository.DeletePayee(payees);
+            await _payeesRepository.DeletePayee(payees);
             await _payeesRepository.Save();
 
             return Ok(payees);
