@@ -30,7 +30,7 @@ namespace SplitwiseAPI.Repository.UserFriendMappingsRepository
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public Task<UserFriendMappings> GetUserFriendMapping(int id)

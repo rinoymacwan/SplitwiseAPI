@@ -13,6 +13,7 @@ namespace SplitwiseAPI.Repository.GroupMemberMappingsRepository
         Task CreateGroupMemberMapping(GroupMemberMappings GroupMemberMapping);
         void UpdateGroupMemberMapping(GroupMemberMappings GroupMemberMapping);
         Task DeleteGroupMemberMapping(GroupMemberMappings GroupMemberMapping);
+        Task DeleteGroupMemberMappingByGroupId(int id);
         Task Save();
         bool GroupMemberMappingExists(int id);
     }

@@ -32,9 +32,19 @@ namespace SplitwiseAPI.Repository.GroupMemberMappingsRepository
             context.GroupMemberMappings.Remove(GroupMemberMapping);
         }
 
+        public async Task DeleteGroupMemberMappingByGroupId(int id)
+        {
+            var x = context.GroupMemberMappings.Where(k => k.GroupId == id);
+            foreach( var y in x)
+            {
+                context.GroupMemberMappings.Remove(y);
+            }
+            
+        }
+
         public void Dispose()
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
         public IEnumerable<GroupMemberMappings> GetGroupMemberMappings()

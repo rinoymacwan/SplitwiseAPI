@@ -145,7 +145,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
             {
                 return NotFound();
             }
-
+            await _groupMemberMappingsRepository.DeleteGroupMemberMappingByGroupId(id);
             await _groupsRepository.DeleteGroup(groups);
             await _groupsRepository.Save();
 
