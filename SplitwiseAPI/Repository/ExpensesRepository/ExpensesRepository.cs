@@ -28,6 +28,17 @@ namespace SplitwiseAPI.Repository.ExpensesRepository
 
         public async Task DeleteExpense(Expenses Expense)
         {
+            var x = context.Payers.Where(k => k.ExpenseId == Expense.Id);
+            var y = context.Payees.Where(k => k.ExpenseId == Expense.Id);
+
+            foreach(var temp in x)
+            {
+                context.Payers.Remove(temp);
+            }
+            foreach (var temp in y)
+            {
+                context.Payees.Remove(temp);
+            }
             context.Expenses.Remove(Expense);
         }
 

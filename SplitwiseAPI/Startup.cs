@@ -50,6 +50,7 @@ namespace SplitwiseAPI
             services.AddScoped<IPayeesRepository, PayeesRepository>();
             services.AddDbContext<SplitwiseAPIContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SplitwiseAPIContext")));
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +67,7 @@ namespace SplitwiseAPI
 
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseCors(options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader());
         }
     }
 }
