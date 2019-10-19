@@ -125,6 +125,19 @@ namespace SplitwiseAPI.Controllers.ApiControllers
 
             return Ok(activities);
         }
+        // DELETE: api/Activities/5
+        [HttpDelete("byUserId/{id}")]
+        public async Task<IActionResult> DeleteAllActivities([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            await _activitiesRepository.DeleteAllActivities(id);
+            await _activitiesRepository.Save();
+
+            return Ok();
+        }
 
         private bool ActivitiesExists(int id)
         {

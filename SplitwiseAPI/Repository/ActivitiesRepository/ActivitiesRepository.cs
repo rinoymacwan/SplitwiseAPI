@@ -30,6 +30,10 @@ namespace SplitwiseAPI.Repository.ActivitiesRepository
         {
             context.Activities.Remove(Activity);
         }
+        public async Task DeleteAllActivities(int id)
+        {
+            context.Activities.RemoveRange(context.Activities.Where(k => k.UserId == id));
+        }
 
         public void Dispose()
         {
