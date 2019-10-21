@@ -33,7 +33,7 @@ namespace SplitwiseAPI.Repository.SettlementsRepository
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
         public IEnumerable<Settlements> GetSettlements()

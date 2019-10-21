@@ -60,7 +60,7 @@ namespace SplitwiseAPI.Repository.UsersRepository
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+           // throw new NotImplementedException();
         }
 
         

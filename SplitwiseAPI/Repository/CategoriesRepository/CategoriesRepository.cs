@@ -33,7 +33,7 @@ namespace SplitwiseAPI.Repository.CategoriesRepository
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
 
         public IEnumerable<Categories> GetCategories()

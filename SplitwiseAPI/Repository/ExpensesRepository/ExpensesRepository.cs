@@ -44,7 +44,7 @@ namespace SplitwiseAPI.Repository.ExpensesRepository
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
 
         public IEnumerable<Expenses> GetExpenses()

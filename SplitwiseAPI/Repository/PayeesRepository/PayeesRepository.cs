@@ -33,7 +33,7 @@ namespace SplitwiseAPI.Repository.PayeesRepository
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
         public IEnumerable<Payees> GetPayees()

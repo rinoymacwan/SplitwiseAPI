@@ -37,7 +37,7 @@ namespace SplitwiseAPI.Repository.ActivitiesRepository
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
 
         public IEnumerable<Activities> GetActivities()
