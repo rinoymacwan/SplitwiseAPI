@@ -16,5 +16,6 @@ namespace SplitwiseAPI.Repository.UsersRepository
         Task DeleteUser(Users user);
         Task Save();
         bool UserExists(int id);
+        Task<Boolean> Authenticate(Users user);
     }
 }

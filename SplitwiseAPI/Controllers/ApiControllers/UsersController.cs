@@ -136,5 +136,11 @@ namespace SplitwiseAPI.Controllers
         {
             return _usersRepository.UserExists(id);
         }
+        // POST: api/Users
+        [HttpPost("authenticate")]
+        public async Task<Boolean> Authenticate([FromBody] Users users)
+        {
+            return await _usersRepository.Authenticate(users);
+        }
     }
 }
