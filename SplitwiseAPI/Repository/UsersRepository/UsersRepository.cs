@@ -62,15 +62,15 @@ namespace SplitwiseAPI.Repository.UsersRepository
         {
            // throw new NotImplementedException();
         }
-        public async Task<Boolean> Authenticate(Users user)
+        public async Task<Users> Authenticate(Users user)
         {
             var x = await context.Users.Where(k => k.Email == user.Email && k.Password == user.Password).SingleOrDefaultAsync();
             if(x != null)
             {
-                return true;
+                return x;
             } else
             {
-                return false;
+                return new Users();
             }
         }
 
