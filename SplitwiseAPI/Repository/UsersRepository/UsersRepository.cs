@@ -26,6 +26,11 @@ namespace SplitwiseAPI.Repository.UsersRepository
             return context.Users.FindAsync(id);
         }
 
+        public Task<Users> GetUserByEmail(string email)
+        {
+            return context.Users.Where(k => k.Email == email).SingleOrDefaultAsync();
+        }
+
         public IEnumerable<Users> GetAllFriends(int id)
         {
             return context.UserFriendMappings.Where(u => u.UserId == id).Select(x => x.Friend);

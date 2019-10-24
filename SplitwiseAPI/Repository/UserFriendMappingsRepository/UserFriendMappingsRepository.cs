@@ -28,6 +28,14 @@ namespace SplitwiseAPI.Repository.UserFriendMappingsRepository
             context.UserFriendMappings.Remove(x);
         }
 
+        public async Task DeleteUserFriendMappingByIds(int id1, int id2)
+        {
+            var x = await context.UserFriendMappings.Where(k => k.UserId == id1 && k.FriendId == id2).FirstOrDefaultAsync();
+            var y = await context.UserFriendMappings.Where(k => k.UserId == id2 && k.FriendId == id1).FirstOrDefaultAsync();
+            context.UserFriendMappings.Remove(x);
+            context.UserFriendMappings.Remove(y);
+        }
+
         public void Dispose()
         {
             //throw new NotImplementedException();

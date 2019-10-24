@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SplitwiseAPI.DomainModel.Models;
 using SplitwiseAPI.Models;
+using SplitwiseAPI.Repository.ExpensesRepository;
 using SplitwiseAPI.Repository.GroupMemberMappingsRepository;
 using SplitwiseAPI.Repository.GroupsRepository;
 using SplitwiseAPI.Repository.UserFriendMappingsRepository;
@@ -20,11 +21,13 @@ namespace SplitwiseAPI.Controllers.ApiControllers
         private readonly IGroupsRepository _groupsRepository;
         private readonly IGroupMemberMappingsRepository _groupMemberMappingsRepository;
         private readonly IUserFriendMappingsRepository _userFriendMappingsRepository;
-        public GroupsController(IGroupsRepository groupsRepository, IGroupMemberMappingsRepository groupMemberMappingsRepository, IUserFriendMappingsRepository userFriendMappingsRepository)
+        private readonly IExpensesRepository _expensesRepository;
+        public GroupsController(IGroupsRepository groupsRepository, IGroupMemberMappingsRepository groupMemberMappingsRepository, IUserFriendMappingsRepository userFriendMappingsRepository, IExpensesRepository expensesRepository)
         {
             this._groupsRepository = groupsRepository;
             this._groupMemberMappingsRepository = groupMemberMappingsRepository;
             this._userFriendMappingsRepository = userFriendMappingsRepository;
+            this._expensesRepository = expensesRepository;
         }
 
         // GET: api/Groups
@@ -146,6 +149,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return NotFound();
             }
             await _groupMemberMappingsRepository.DeleteGroupMemberMappingByGroupId(id);
+            await _expensesRepository.DeleteExpensesByGroupId(id);
             await _groupsRepository.DeleteGroup(groups);
             await _groupsRepository.Save();
 

@@ -17,10 +17,12 @@ namespace SplitwiseAPI.Controllers.ApiControllers
     public class UserFriendMappingsController : ControllerBase
     {
         private readonly IUserFriendMappingsRepository _userFriendMappingsRepository;
+        private readonly IUsersRepository _usersRepository;
 
-        public UserFriendMappingsController(IUserFriendMappingsRepository userFriendMappingsRepository)
+        public UserFriendMappingsController(IUserFriendMappingsRepository userFriendMappingsRepository, IUsersRepository usersRepository)
         {
             this._userFriendMappingsRepository = userFriendMappingsRepository;
+            this._usersRepository = usersRepository;
         }
 
         // GET: api/UserFriendMappings
@@ -99,27 +101,38 @@ namespace SplitwiseAPI.Controllers.ApiControllers
 
             return CreatedAtAction("GetUserFriendMappings", new { id = userFriendMappings.Id }, userFriendMappings);
         }
+        [HttpPost("ByEmail/{id}")]
+        public async Task<Boolean> PostUserFriendMappingsByEmail([FromRoute] int id, [FromBody] Users user)
+        {
+            System.Diagnostics.Debug.Write("AAAAAAAAAAAAAAAAA");
+            System.Diagnostics.Debug.Write(user.Email);
+            string email = user.Email;
+            var x = await _usersRepository.GetUserByEmail(email);
+            if (x != null)
+            {
+                _userFriendMappingsRepository.CreateUserFriendMapping(new UserFriendMappings() { UserId = id, FriendId = x.Id });
+                _userFriendMappingsRepository.CreateUserFriendMapping(new UserFriendMappings() { UserId = x.Id, FriendId = id });
+                await _userFriendMappingsRepository.SaveAsync();
+                return true;
+            } else {
+                return false;
+            }   
+        }
 
         // DELETE: api/UserFriendMappings/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserFriendMappings([FromRoute] int id)
+        public async Task<IActionResult> DeleteUserFriendMappings([FromHeader] Users[] users)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var userFriendMappings = await _userFriendMappingsRepository.GetUserFriendMapping(id);
-            if (userFriendMappings == null)
-            {
-                return NotFound();
-            }
-
-            await _userFriendMappingsRepository.DeleteUserFriendMapping(userFriendMappings);
+            await _userFriendMappingsRepository.DeleteUserFriendMappingByIds(users[0].Id, users[1].Id);
 
             await _userFriendMappingsRepository.SaveAsync();
 
-            return Ok(userFriendMappings);
+            return Ok();
         }
 
         private bool UserFriendMappingsExists(int id)

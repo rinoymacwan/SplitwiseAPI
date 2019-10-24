@@ -66,5 +66,25 @@ namespace SplitwiseAPI.Repository.ExpensesRepository
         {
             context.Entry(Expense).State = EntityState.Modified;
         }
+
+        public async Task DeleteExpensesByGroupId(int id)
+        {
+            var listOfExpenses = context.Expenses.Where(k => k.GroupId == id);
+            foreach(var expense in listOfExpenses )
+            {
+                var x = context.Payers.Where(k => k.ExpenseId == expense.Id);
+                var y = context.Payees.Where(k => k.ExpenseId == expense.Id);
+
+                foreach (var temp in x)
+                {
+                    context.Payers.Remove(temp);
+                }
+                foreach (var temp in y)
+                {
+                    context.Payees.Remove(temp);
+                }
+                context.Expenses.Remove(expense);
+            }
+        }
     }
 }

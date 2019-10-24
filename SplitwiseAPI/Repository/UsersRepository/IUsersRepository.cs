@@ -11,6 +11,7 @@ namespace SplitwiseAPI.Repository.UsersRepository
         IEnumerable<Users> GetUsers();
         IEnumerable<Users> GetAllFriends(int id);
         Task<Users> GetUser(int id);
+        Task<Users> GetUserByEmail(string email);
         void CreateUser(Users user); 
         void UpdateUser(Users user);
         Task DeleteUser(Users user);
