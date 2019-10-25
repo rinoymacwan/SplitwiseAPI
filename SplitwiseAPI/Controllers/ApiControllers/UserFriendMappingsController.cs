@@ -120,15 +120,16 @@ namespace SplitwiseAPI.Controllers.ApiControllers
         }
 
         // DELETE: api/UserFriendMappings/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserFriendMappings([FromHeader] Users[] users)
+        [HttpDelete("delete/{user1?}/{user2?}")]
+        public async Task<IActionResult> DeleteUserFriendMappings([FromQuery] string user1, [FromQuery] string user2)
         {
+            System.Diagnostics.Debug.Write(user1 + " XXXXXXX " +user2);
             if (!ModelState.IsValid)
-            {
+            {   
                 return BadRequest(ModelState);
             }
 
-            await _userFriendMappingsRepository.DeleteUserFriendMappingByIds(users[0].Id, users[1].Id);
+            await _userFriendMappingsRepository.DeleteUserFriendMappingByIds(int.Parse(user1), int.Parse(user2));
 
             await _userFriendMappingsRepository.SaveAsync();
 

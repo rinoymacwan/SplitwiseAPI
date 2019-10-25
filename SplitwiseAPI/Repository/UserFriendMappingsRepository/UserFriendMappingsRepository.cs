@@ -32,6 +32,14 @@ namespace SplitwiseAPI.Repository.UserFriendMappingsRepository
         {
             var x = await context.UserFriendMappings.Where(k => k.UserId == id1 && k.FriendId == id2).FirstOrDefaultAsync();
             var y = await context.UserFriendMappings.Where(k => k.UserId == id2 && k.FriendId == id1).FirstOrDefaultAsync();
+            var z = await context.UserFriendMappings.ToListAsync();
+            System.Diagnostics.Debug.Write("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            System.Diagnostics.Debug.Write(id1);
+            System.Diagnostics.Debug.Write(id2);
+            System.Diagnostics.Debug.Write("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            System.Diagnostics.Debug.Write(x.Id);
+            System.Diagnostics.Debug.Write(y.Id);
+
             context.UserFriendMappings.Remove(x);
             context.UserFriendMappings.Remove(y);
         }
