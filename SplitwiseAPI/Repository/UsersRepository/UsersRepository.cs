@@ -78,7 +78,5 @@ namespace SplitwiseAPI.Repository.UsersRepository
                 return new Users();
             }
         }
-
-        
     }
 }
