@@ -78,10 +78,10 @@ namespace SplitwiseAPI
 
             var tokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuer = true,
+                ValidateIssuer = false,
                 ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
 
-                ValidateAudience = true,
+                ValidateAudience = false,
                 ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
 
                 ValidateIssuerSigningKey = true,

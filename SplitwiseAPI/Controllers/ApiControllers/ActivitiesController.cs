@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +14,8 @@ using SplitwiseAPI.Repository.ActivitiesRepository;
 
 namespace SplitwiseAPI.Controllers.ApiControllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Policy = "ApiUser")]
     [Route("api/[controller]")]
     [ApiController]
     public class ActivitiesController : ControllerBase

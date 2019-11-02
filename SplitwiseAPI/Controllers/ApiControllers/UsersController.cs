@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +20,7 @@ using SplitwiseAPI.Utility.Helpers;
 
 namespace SplitwiseAPI.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -44,6 +47,8 @@ namespace SplitwiseAPI.Controllers
         }
 
         // GET: api/Users
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Policy = "ApiUser")]
         [HttpGet]
         public IEnumerable<Users> GetUsers()
         {
@@ -52,6 +57,8 @@ namespace SplitwiseAPI.Controllers
         }
 
         // GET: api/Users/Friends
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Policy = "ApiUser")]
         [HttpGet("{id}/friends")]
         public IEnumerable<Users> GetAllFriends([FromRoute] string id)
         {
@@ -59,6 +66,8 @@ namespace SplitwiseAPI.Controllers
         }
 
         // GET: api/Users/5
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Policy = "ApiUser")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUsers([FromRoute] string id)
         {
@@ -78,6 +87,8 @@ namespace SplitwiseAPI.Controllers
         }
 
         // PUT: api/Users/5
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Policy = "ApiUser")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUsers([FromRoute] string id, [FromBody] Users users)
         {
@@ -128,6 +139,8 @@ namespace SplitwiseAPI.Controllers
         }
 
         // DELETE: api/Users/5
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Policy = "ApiUser")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUsers([FromRoute] string id)
         {
@@ -175,12 +188,13 @@ namespace SplitwiseAPI.Controllers
             //System.Diagnostics.Debug.Write(credentials.UserName);
            // System.Diagnostics.Debug.Write(credentials.Password);
             var identity = await GetClaimsIdentity(credentials.UserName, credentials.Password);
+            var user = await _userManager.FindByEmailAsync(credentials.UserName);
             if (identity == null)
             {
                 return BadRequest(Errors.AddErrorToModelState("login_failure", "Invalid username or password.", ModelState));
             }
 
-            var jwt = await Tokens.GenerateJwt(identity, _jwtFactory, credentials.UserName, _jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
+            var jwt = await Tokens.GenerateJwt(user, identity, _jwtFactory, credentials.UserName, _jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
             return new OkObjectResult(jwt);
         }
 
