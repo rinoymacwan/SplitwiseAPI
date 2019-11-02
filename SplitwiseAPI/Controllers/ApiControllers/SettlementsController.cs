@@ -31,7 +31,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
 
         // GET: api/Settlements/GetByUserId
         [HttpGet("GetByUserId/{id}")]
-        public async Task<IActionResult> GetSettlementsByUserId([FromRoute] int id)
+        public async Task<IActionResult> GetSettlementsByUserId([FromRoute] string id)
         {
             if (!ModelState.IsValid)
             {

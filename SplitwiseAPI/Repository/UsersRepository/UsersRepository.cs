@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SplitwiseAPI.DomainModel.Models;
 using SplitwiseAPI.Models;
 using System;
@@ -11,34 +12,36 @@ namespace SplitwiseAPI.Repository.UsersRepository
     public class UsersRepository : IUsersRepository, IDisposable
     {
         private SplitwiseAPIContext context;
+        private readonly UserManager<Users> _userManager;
 
-        public UsersRepository(SplitwiseAPIContext context)
+        public UsersRepository(SplitwiseAPIContext context, UserManager<Users> _userManager)
         {
             this.context = context;
+            this._userManager = _userManager;
         }
         public IEnumerable<Users> GetUsers()
         {
-            return context.Users;
+            return _userManager.Users;
         }
 
-        public Task<Users> GetUser(int id)
+        public Task<Users> GetUser(string id)
         {
-            return context.Users.FindAsync(id);
+            return _userManager.Users.Where(k => k.Id ==id).FirstAsync();
         }
 
         public Task<Users> GetUserByEmail(string email)
         {
-            return context.Users.Where(k => k.Email == email).SingleOrDefaultAsync();
+            return _userManager.Users.Where(k => k.Email == email).SingleOrDefaultAsync();
         }
 
-        public IEnumerable<Users> GetAllFriends(int id)
+        public IEnumerable<Users> GetAllFriends(string id)
         {
             return context.UserFriendMappings.Where(u => u.UserId == id).Select(x => x.Friend);
         }
 
-        public void CreateUser(Users user)
+        public async Task CreateUser(Users user)
         {
-            context.Users.Add(user);
+            await _userManager.CreateAsync(user, user.Password);
         }
 
         public void UpdateUser(Users user)
@@ -55,10 +58,10 @@ namespace SplitwiseAPI.Repository.UsersRepository
 
         async Task IUsersRepository.DeleteUser(Users user)
         {
-            context.Users.Remove(user);
+            await _userManager.DeleteAsync(user);
         }
 
-        public bool UserExists(int id)
+        public bool UserExists(string id)
         {
             return context.Users.Any(e => e.Id == id);
         }

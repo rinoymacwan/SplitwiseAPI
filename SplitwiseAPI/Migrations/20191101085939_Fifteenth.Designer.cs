@@ -10,8 +10,8 @@ using SplitwiseAPI.Models;
 namespace SplitwiseAPI.Migrations
 {
     [DbContext(typeof(SplitwiseAPIContext))]
-    [Migration("20191003081414_Eleventh")]
-    partial class Eleventh
+    [Migration("20191101085939_Fifteenth")]
+    partial class Fifteenth
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,11 +27,11 @@ namespace SplitwiseAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("DateTime");
+
                     b.Property<string>("Description");
 
-                    b.Property<string>("Notes");
-
-                    b.Property<int>("UserId");
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
@@ -59,9 +59,9 @@ namespace SplitwiseAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AddedById");
+                    b.Property<string>("AddedById");
 
-                    b.Property<int>("CategoryId");
+                    b.Property<int?>("CategoryId");
 
                     b.Property<string>("Currency");
 
@@ -69,7 +69,7 @@ namespace SplitwiseAPI.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<int>("GroupId");
+                    b.Property<int?>("GroupId");
 
                     b.Property<string>("Notes");
 
@@ -96,7 +96,7 @@ namespace SplitwiseAPI.Migrations
 
                     b.Property<int>("GroupId");
 
-                    b.Property<int>("MemberId");
+                    b.Property<string>("MemberId");
 
                     b.HasKey("Id");
 
@@ -113,7 +113,7 @@ namespace SplitwiseAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("MadeById");
+                    b.Property<string>("MadeById");
 
                     b.Property<string>("Name");
 
@@ -132,7 +132,7 @@ namespace SplitwiseAPI.Migrations
 
                     b.Property<int>("ExpenseId");
 
-                    b.Property<int>("PayeeId");
+                    b.Property<string>("PayeeId");
 
                     b.Property<int>("PayeeShare");
 
@@ -155,7 +155,7 @@ namespace SplitwiseAPI.Migrations
 
                     b.Property<int>("ExpenseId");
 
-                    b.Property<int>("PayerId");
+                    b.Property<string>("PayerId");
 
                     b.Property<int>("PayerShare");
 
@@ -180,9 +180,9 @@ namespace SplitwiseAPI.Migrations
 
                     b.Property<int?>("GroupId");
 
-                    b.Property<int>("PayeeId");
+                    b.Property<string>("PayeeId");
 
-                    b.Property<int>("PayerId");
+                    b.Property<string>("PayerId");
 
                     b.HasKey("Id");
 
@@ -201,9 +201,9 @@ namespace SplitwiseAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("FriendId");
+                    b.Property<string>("FriendId");
 
-                    b.Property<int>("UserId");
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
@@ -216,15 +216,40 @@ namespace SplitwiseAPI.Migrations
 
             modelBuilder.Entity("SplitwiseAPI.DomainModel.Models.Users", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("ConcurrencyStamp");
 
                     b.Property<string>("Email");
 
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
                     b.Property<string>("Name");
 
+                    b.Property<string>("NormalizedEmail");
+
+                    b.Property<string>("NormalizedUserName");
+
                     b.Property<string>("Password");
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName");
 
                     b.HasKey("Id");
 

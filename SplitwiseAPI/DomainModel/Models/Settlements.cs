@@ -14,11 +14,11 @@ namespace SplitwiseAPI.DomainModel.Models
         [ForeignKey("GroupId")]
         public Groups Group { get; set; }
 
-        public int PayerId { get; set; }
+        public string PayerId { get; set; }
         [ForeignKey("PayerId")]
         public Users Payer { get; set; }
 
-        public int PayeeId { get; set; }
+        public string PayeeId { get; set; }
         [ForeignKey("PayeeId")]
         public Users Payee { get; set; }
 

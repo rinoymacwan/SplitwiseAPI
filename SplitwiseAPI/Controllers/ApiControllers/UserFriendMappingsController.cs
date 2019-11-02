@@ -53,14 +53,14 @@ namespace SplitwiseAPI.Controllers.ApiControllers
 
         // PUT: api/UserFriendMappings/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserFriendMappings([FromRoute] int id, [FromBody] UserFriendMappings userFriendMappings)
+        public async Task<IActionResult> PutUserFriendMappings([FromRoute] string id, [FromBody] UserFriendMappings userFriendMappings)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != userFriendMappings.Id)
+            if (int.Parse(id) != userFriendMappings.Id)
             {
                 return BadRequest();
             }
@@ -102,7 +102,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
             return CreatedAtAction("GetUserFriendMappings", new { id = userFriendMappings.Id }, userFriendMappings);
         }
         [HttpPost("ByEmail/{id}")]
-        public async Task<Boolean> PostUserFriendMappingsByEmail([FromRoute] int id, [FromBody] Users user)
+        public async Task<Boolean> PostUserFriendMappingsByEmail([FromRoute] string id, [FromBody] Users user)
         {
             System.Diagnostics.Debug.Write("AAAAAAAAAAAAAAAAA");
             System.Diagnostics.Debug.Write(user.Email);
@@ -129,14 +129,14 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            await _userFriendMappingsRepository.DeleteUserFriendMappingByIds(int.Parse(user1), int.Parse(user2));
+            await _userFriendMappingsRepository.DeleteUserFriendMappingByIds(user1, user2);
 
             await _userFriendMappingsRepository.SaveAsync();
 
             return Ok();
         }
 
-        private bool UserFriendMappingsExists(int id)
+        private bool UserFriendMappingsExists(string id)
         {
             return _userFriendMappingsRepository.UserFriendMappingExists(id);
         }

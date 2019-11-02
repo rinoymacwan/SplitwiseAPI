@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SplitwiseAPI.DomainModel.Models;
 
 namespace SplitwiseAPI.Models
 {
-    public class SplitwiseAPIContext : DbContext
+    public class SplitwiseAPIContext : IdentityDbContext<Users>
     {
         public SplitwiseAPIContext (DbContextOptions<SplitwiseAPIContext> options)
             : base(options)
@@ -18,7 +19,7 @@ namespace SplitwiseAPI.Models
         {
         }
 
-        public DbSet<SplitwiseAPI.DomainModel.Models.Users> Users { get; set; }
+        // public DbSet<SplitwiseAPI.DomainModel.Models.Users> Users { get; set; }
 
         public DbSet<SplitwiseAPI.DomainModel.Models.UserFriendMappings> UserFriendMappings { get; set; }
 

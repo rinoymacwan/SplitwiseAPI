@@ -63,7 +63,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
 
         // GET: api/Groups/ByUserId
         [HttpGet("ByUserId/{id}")]
-        public async Task<IActionResult> GetGroupsByUserId([FromRoute] int id)
+        public async Task<IActionResult> GetGroupsByUserId([FromRoute] string id)
         {
             System.Diagnostics.Debug.WriteLine("AAAAAAAAAAAAAAAA");
             if (!ModelState.IsValid)

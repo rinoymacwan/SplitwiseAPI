@@ -14,7 +14,7 @@ namespace SplitwiseAPI.DomainModel.Models
         [ForeignKey("ExpenseId")]
         public Expenses Expense { get; set; }
 
-        public int PayerId { get; set; }
+        public string PayerId { get; set; }
         [ForeignKey("PayerId")]
         public Users User { get; set; }
 

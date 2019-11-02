@@ -28,7 +28,7 @@ namespace SplitwiseAPI.Repository.UserFriendMappingsRepository
             context.UserFriendMappings.Remove(x);
         }
 
-        public async Task DeleteUserFriendMappingByIds(int id1, int id2)
+        public async Task DeleteUserFriendMappingByIds(string id1, string id2)
         {
             var x = await context.UserFriendMappings.Where(k => k.UserId == id1 && k.FriendId == id2).FirstOrDefaultAsync();
             var y = await context.UserFriendMappings.Where(k => k.UserId == id2 && k.FriendId == id1).FirstOrDefaultAsync();
@@ -70,7 +70,7 @@ namespace SplitwiseAPI.Repository.UserFriendMappingsRepository
             context.Entry(UserFriendMapping).State = EntityState.Modified;
         }
 
-        public bool UserFriendMappingExists(int id)
+        public bool UserFriendMappingExists(string id)
         {
             return context.Users.Any(e => e.Id == id);
         }

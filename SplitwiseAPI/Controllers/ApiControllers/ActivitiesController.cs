@@ -30,7 +30,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
             return _activitiesRepository.GetActivities();
         }
         [HttpGet("ByUserId/{id}")]
-        public IEnumerable<Activities> GetActivitiesByUserId([FromRoute] int id)
+        public IEnumerable<Activities> GetActivitiesByUserId([FromRoute] string id)
         {
             //Thread.Sleep(TimeSpan.FromSeconds(5));
             return _activitiesRepository.GetActivities().Where(k =>k.UserId==id);
@@ -127,7 +127,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
         }
         // DELETE: api/Activities/5
         [HttpDelete("byUserId/{id}")]
-        public async Task<IActionResult> DeleteAllActivities([FromRoute] int id)
+        public async Task<IActionResult> DeleteAllActivities([FromRoute] string id)
         {
             if (!ModelState.IsValid)
             {

@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace SplitwiseAPI.DomainModel.Models
 {
-    public class Users: IdentityUser
+    public class UserRole: IdentityRole
     {
-        public string Name { get; set; }
-        public string Password { get; set; }
     }
 }

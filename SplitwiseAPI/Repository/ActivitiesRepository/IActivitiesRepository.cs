@@ -13,7 +13,7 @@ namespace SplitwiseAPI.Repository.ActivitiesRepository
         void CreateActivity(Activities Activity);
         void UpdateActivity(Activities Activity);
         Task DeleteActivity(Activities Activity);
-        Task DeleteAllActivities(int id);
+        Task DeleteAllActivities(string id);
         Task Save();
         bool ActivityExists(int id);
     }
