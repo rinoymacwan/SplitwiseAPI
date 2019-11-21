@@ -42,7 +42,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var settlements = _settlementsRepository.GetSettlements().Where(s => s.PayeeId == id || s.PayerId == id).ToList();
+            var settlements = _settlementsRepository.GetSettlementsByUserId(id);
 
             if (settlements == null)
             {
@@ -61,7 +61,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var settlements = _settlementsRepository.GetSettlements().Where(s => s.GroupId == id).ToList();
+            var settlements = _settlementsRepository.GetSettlementsByGroupId(id);
 
             if (settlements == null)
             {

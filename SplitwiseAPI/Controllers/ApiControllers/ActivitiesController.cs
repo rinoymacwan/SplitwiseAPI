@@ -36,8 +36,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
         [HttpGet("ByUserId/{id}")]
         public IEnumerable<Activities> GetActivitiesByUserId([FromRoute] string id)
         {
-            //Thread.Sleep(TimeSpan.FromSeconds(5));
-            return _activitiesRepository.GetActivities().Where(k =>k.UserId==id);
+            return _activitiesRepository.GetActivitiesByUserId(id);
         }
 
         // GET: api/Activities/5

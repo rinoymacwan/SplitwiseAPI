@@ -98,36 +98,22 @@ namespace SplitwiseAPI.Controllers.ApiControllers
             {
                 return BadRequest(ModelState);
             }
-            UserFriendMappings otherEntry = new UserFriendMappings() { UserId = userFriendMappings.FriendId, FriendId = userFriendMappings.UserId };
             _userFriendMappingsRepository.CreateUserFriendMapping(userFriendMappings);
-            _userFriendMappingsRepository.CreateUserFriendMapping(otherEntry);
             await _userFriendMappingsRepository.SaveAsync();
 
             return CreatedAtAction("GetUserFriendMappings", new { id = userFriendMappings.Id }, userFriendMappings);
         }
         [HttpPost("ByEmail/{id}")]
-        public async Task<Boolean> PostUserFriendMappingsByEmail([FromRoute] string id, [FromBody] Users user)
+        public async Task<IActionResult> PostUserFriendMappingsByEmail([FromRoute] string id, [FromBody] Users user)
         {
-            System.Diagnostics.Debug.Write("AAAAAAAAAAAAAAAAA");
-            System.Diagnostics.Debug.Write(user.Email);
-            string email = user.Email;
-            var x = await _usersRepository.GetUserByEmail(email);
-            if (x != null)
-            {
-                _userFriendMappingsRepository.CreateUserFriendMapping(new UserFriendMappings() { UserId = id, FriendId = x.Id });
-                _userFriendMappingsRepository.CreateUserFriendMapping(new UserFriendMappings() { UserId = x.Id, FriendId = id });
-                await _userFriendMappingsRepository.SaveAsync();
-                return true;
-            } else {
-                return false;
-            }   
+            var x = await _userFriendMappingsRepository.CreateUserFriendMappingByEmail(id, user);
+            return Ok(x);
         }
 
         // DELETE: api/UserFriendMappings/5
         [HttpDelete("delete/{user1?}/{user2?}")]
         public async Task<IActionResult> DeleteUserFriendMappings([FromQuery] string user1, [FromQuery] string user2)
         {
-            System.Diagnostics.Debug.Write(user1 + " XXXXXXX " +user2);
             if (!ModelState.IsValid)
             {   
                 return BadRequest(ModelState);

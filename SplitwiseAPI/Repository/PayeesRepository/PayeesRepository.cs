@@ -40,6 +40,15 @@ namespace SplitwiseAPI.Repository.PayeesRepository
         {
             return context.Payees.Include(t => t.User);
         }
+        public IEnumerable<Payees> GetPayeesByExpenseId(int id)
+        {
+            return context.Payees.Include(t => t.User).Where(e => e.ExpenseId == id).ToList();
+        }
+
+        public IEnumerable<Payees> GetPayeesByPayeeId(string id)
+        {
+            return this.GetPayees().Where(e => e.PayeeId == id).ToList();
+        }
 
         public Task<Payees> GetPayee(int id)
         {

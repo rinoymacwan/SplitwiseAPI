@@ -50,40 +50,26 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var groups = await _groupsRepository.GetGroup(id);
+            var groupDetails = await _groupsRepository.GetGroupWithDetails(id);
             
-            if (groups == null)
+            if (groupDetails == null)
             {
                 return NotFound();
             }
-            var members = _groupMemberMappingsRepository.GetGroupMemberMappings().Where(g => g.GroupId == id).Select(k => k.User).ToList();
-            var members1 = _groupMemberMappingsRepository.GetGroupMemberMappings().ToList(); ;
-            System.Diagnostics.Debug.WriteLine("XXXXXXXXXXXXXXXX: " + members1[2].User.Name);
-            GroupAndMembers GAM = new GroupAndMembers() { Group = groups, Members = members };
-            //_userFriendMappingsRepository.GetUserFriendMappings().Where(u => u.UserId == id).Select(x => x.Friend);
 
-            return Ok(GAM);
+            return Ok(groupDetails);
         }
 
         // GET: api/Groups/ByUserId
         [HttpGet("ByUserId/{id}")]
         public async Task<IActionResult> GetGroupsByUserId([FromRoute] string id)
         {
-            System.Diagnostics.Debug.WriteLine("AAAAAAAAAAAAAAAA");
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            //var groups = await _context.Groups.Include(u => u.User).FirstOrDefaultAsync(i => i.Id == id);
-
-            //if (groups == null)
-            //{
-            //    return NotFound();
-            //}
-            var groups = _groupMemberMappingsRepository.GetGroupMemberMappings().Where(g => g.MemberId == id).Select(k => k.Group).ToList();
-            //GroupAndMembers GAM = new GroupAndMembers() { Group = groups, Members = members };
-            //_context.UserFriendMappings.Where(u => u.UserId == id).Select(x => x.Friend);
+            var groups = _groupsRepository.GetGroupsByUserId(id);
 
             return Ok(groups);
         }
@@ -152,8 +138,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
             {
                 return NotFound();
             }
-            await _groupMemberMappingsRepository.DeleteGroupMemberMappingByGroupId(id);
-            await _expensesRepository.DeleteExpensesByGroupId(id);
+            
             await _groupsRepository.DeleteGroup(groups);
             await _groupsRepository.Save();
 

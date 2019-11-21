@@ -41,6 +41,16 @@ namespace SplitwiseAPI.Repository.PayersRepository
             return context.Payers.Include(t => t.User);
         }
 
+        public IEnumerable<Payers> GetPayersByExpenseId(int id)
+        {
+            return context.Payers.Include(t => t.User).Where(e => e.ExpenseId == id).ToList();
+        }
+
+        public IEnumerable<Payers> GetPayersByPayerId(string id)
+        {
+            return context.Payers.Include(t => t.User).Where(e => e.PayerId == id).ToList();
+        }
+
         public Task<Payers> GetPayer(int id)
         {
             return context.Payers.FindAsync(id);

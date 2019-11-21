@@ -18,5 +18,7 @@ namespace SplitwiseAPI.Repository.UsersRepository
         Task Save();
         bool UserExists(string id);
         Task<Users> Authenticate(Users user);
+        Task<bool> Login(Users credentials);
+        Task<string> GenerateJWT(Users credentials);
     }
 }

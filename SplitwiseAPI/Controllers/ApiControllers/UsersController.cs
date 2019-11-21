@@ -26,13 +26,6 @@ namespace SplitwiseAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUsersRepository _usersRepository;
-
-        //public UsersController()
-        //{
-        //    System.Diagnostics.Debug.WriteLine("AAAAAAAAAAAA");
-        //    this._usersRepository = new UsersRepository(new SplitwiseAPIContext());
-        //}
-
         private readonly UserManager<Users> _userManager;
         private readonly IJwtFactory _jwtFactory;
         private readonly JwtIssuerOptions _jwtOptions;
@@ -164,20 +157,7 @@ namespace SplitwiseAPI.Controllers
         {
             return _usersRepository.UserExists(id);
         }
-        // POST: api/Users
-        //[HttpPost("authenticate")]
-        //public async Task<IActionResult> Authenticate([FromBody] Users users)
-        //{
-        //    var x = await _usersRepository.Authenticate(users); 
-        //    if(x.Email != null)
-        //    {
-        //        return Ok(x);
-        //    } else
-        //    {
-        //        return NotFound();
-        //    }
 
-        //}
         [HttpPost("login")]
         public async Task<IActionResult> Post([FromBody]Users credentials)
         {
@@ -185,42 +165,17 @@ namespace SplitwiseAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            //System.Diagnostics.Debug.Write(credentials.UserName);
-           // System.Diagnostics.Debug.Write(credentials.Password);
-            var identity = await GetClaimsIdentity(credentials.UserName, credentials.Password);
-            var user = await _userManager.FindByEmailAsync(credentials.UserName);
-            if (identity == null)
+            var result = await _usersRepository.Login(credentials);
+            
+            if (result == false)
             {
                 return BadRequest(Errors.AddErrorToModelState("login_failure", "Invalid username or password.", ModelState));
             }
-
-            var jwt = await Tokens.GenerateJwt(user, identity, _jwtFactory, credentials.UserName, _jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
-            return new OkObjectResult(jwt);
-        }
-
-        private async Task<ClaimsIdentity> GetClaimsIdentity(string userName, string password)
-        {
-            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
-                return await Task.FromResult<ClaimsIdentity>(null);
-            // get the user to verifty
-            var userToVerify = await _userManager.FindByNameAsync(userName);
-            var x = await _userManager.Users.ToListAsync();
-            //System.Diagnostics.Debug.Write(userName);
-            //System.Diagnostics.Debug.Write(password);
-            //System.Diagnostics.Debug.Write("BBBB\n");
-            //System.Diagnostics.Debug.Write(x[0].UserName);
-            //System.Diagnostics.Debug.Write(x[0].Password);
-            //System.Diagnostics.Debug.Write(userToVerify.Password);
-            if (userToVerify == null) return await Task.FromResult<ClaimsIdentity>(null);
-
-            // check the credentials
-            if (await _userManager.CheckPasswordAsync(userToVerify, password))
+            else
             {
-                return await Task.FromResult(_jwtFactory.GenerateClaimsIdentity(userName, userToVerify.Id));
+                var jwt = await _usersRepository.GenerateJWT(credentials); 
+                return new OkObjectResult(jwt);
             }
-
-            // Credentials are invalid, or account doesn't exist
-            return await Task.FromResult<ClaimsIdentity>(null);
         }
     }
 }

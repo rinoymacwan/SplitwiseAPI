@@ -5,22 +5,44 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SplitwiseAPI.DomainModel.Models;
 using SplitwiseAPI.Models;
+using SplitwiseAPI.Repository.UsersRepository;
 
 namespace SplitwiseAPI.Repository.UserFriendMappingsRepository
 {
     public class UserFriendMappingsRepository : IUserFriendMappingsRepository, IDisposable
     {
         private SplitwiseAPIContext context;
+        private readonly IUsersRepository _usersRepository;
 
-        public UserFriendMappingsRepository(SplitwiseAPIContext context)
+        public UserFriendMappingsRepository(SplitwiseAPIContext context, IUsersRepository usersRepository)
         {
             this.context = context;
+            this._usersRepository = usersRepository;
         }
-        public void CreateUserFriendMapping(UserFriendMappings UserFriendMapping)
+        public void CreateUserFriendMapping(UserFriendMappings userFriendMapping)
         {
-            context.UserFriendMappings.Add(UserFriendMapping);
+            UserFriendMappings otherEntry = new UserFriendMappings() { UserId = userFriendMapping.FriendId, FriendId = userFriendMapping.UserId };
+            context.UserFriendMappings.Add(userFriendMapping);
+            context.UserFriendMappings.Add(otherEntry);
         }
-
+        public async Task<Boolean> CreateUserFriendMappingByEmail(string id, Users user)
+        {
+            string email = user.Email;
+            var x = await _usersRepository.GetUserByEmail(email);
+            if (x != null)
+            {
+                context.UserFriendMappings.Add(new UserFriendMappings() { UserId = id, FriendId = x.Id });
+                context.UserFriendMappings.Add(new UserFriendMappings() { UserId = x.Id, FriendId = id });
+                // _userFriendMappingsRepository.CreateUserFriendMapping(new UserFriendMappings() { UserId = id, FriendId = x.Id });
+                //  _userFriendMappingsRepository.CreateUserFriendMapping(new UserFriendMappings() { UserId = x.Id, FriendId = id });
+                await SaveAsync();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public async Task DeleteUserFriendMapping(UserFriendMappings UserFriendMapping)
         {
             var x = await context.UserFriendMappings.Where(k => k.UserId == UserFriendMapping.FriendId && k.FriendId == UserFriendMapping.UserId).FirstOrDefaultAsync();
@@ -33,12 +55,6 @@ namespace SplitwiseAPI.Repository.UserFriendMappingsRepository
             var x = await context.UserFriendMappings.Where(k => k.UserId == id1 && k.FriendId == id2).FirstOrDefaultAsync();
             var y = await context.UserFriendMappings.Where(k => k.UserId == id2 && k.FriendId == id1).FirstOrDefaultAsync();
             var z = await context.UserFriendMappings.ToListAsync();
-            System.Diagnostics.Debug.Write("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            System.Diagnostics.Debug.Write(id1);
-            System.Diagnostics.Debug.Write(id2);
-            System.Diagnostics.Debug.Write("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            System.Diagnostics.Debug.Write(x.Id);
-            System.Diagnostics.Debug.Write(y.Id);
 
             context.UserFriendMappings.Remove(x);
             context.UserFriendMappings.Remove(y);

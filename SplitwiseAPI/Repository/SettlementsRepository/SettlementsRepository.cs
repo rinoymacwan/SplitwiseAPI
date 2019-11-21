@@ -41,6 +41,16 @@ namespace SplitwiseAPI.Repository.SettlementsRepository
             return context.Settlements.Include(p => p.Payee).Include(l => l.Payer);
         }
 
+        public IEnumerable<Settlements> GetSettlementsByUserId(string id)
+        {
+            return context.Settlements.Include(p => p.Payee).Include(l => l.Payer).Where(s => s.PayeeId == id || s.PayerId == id).ToList();
+        }
+
+        public IEnumerable<Settlements> GetSettlementsByGroupId(int id)
+        {
+            return context.Settlements.Include(p => p.Payee).Include(l => l.Payer).Where(s => s.GroupId == id).ToList(); ;
+        }
+
         public Task<Settlements> GetSettlement(int id)
         {
             return context.Settlements.FindAsync(id);

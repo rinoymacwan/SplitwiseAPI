@@ -61,7 +61,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var payees = _payeesRepository.GetPayees().Where(e => e.ExpenseId == id).ToList();
+            var payees = _payeesRepository.GetPayeesByExpenseId(id);
 
             if (payees == null)
             {
@@ -80,7 +80,7 @@ namespace SplitwiseAPI.Controllers.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var payees = _payeesRepository.GetPayees().Where(e => e.PayeeId == id).ToList();
+            var payees = _payeesRepository.GetPayeesByPayeeId(id);
 
             if (payees == null)
             {

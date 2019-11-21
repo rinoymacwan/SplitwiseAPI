@@ -45,6 +45,11 @@ namespace SplitwiseAPI.Repository.ActivitiesRepository
             return context.Activities;
         }
 
+        public IEnumerable<Activities> GetActivitiesByUserId(string id)
+        {
+            return context.Activities.Where(k => k.UserId == id);
+        }
+
         public Task<Activities> GetActivity(int id)
         {
             return context.Activities.FindAsync(id);
