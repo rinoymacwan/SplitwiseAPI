@@ -29,6 +29,7 @@ using System.Text;
 using SplitwiseAPI.Utility.Helpers;
 using Microsoft.AspNetCore.Identity;
 using SplitwiseAPI.DomainModel.Models;
+using SplitwiseAPI.Hubs;
 
 namespace SplitwiseAPI
 {
@@ -124,6 +125,17 @@ namespace SplitwiseAPI
             {
                 options.AddPolicy("ApiUser", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, Constants.Strings.JwtClaims.ApiAccess));
             });
+
+            services.AddCors(o => o.AddPolicy("CorsPolicy", b =>
+            {
+                b
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+                .WithOrigins("http://localhost:4200");
+            }));
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -139,8 +151,13 @@ namespace SplitwiseAPI
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("CorsPolicy");
+
+            app.UseSignalR(options =>
+            {
+                options.MapHub<NotifyHub>("/notify");
+            });
             app.UseMvc();
-            app.UseCors(options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader());
         }
     }
 }
