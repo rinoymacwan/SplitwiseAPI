@@ -8,5 +8,6 @@ namespace SplitwiseAPI.Hubs
     public interface INotifyHub
     {
         Task BroadcastMessage(string type, string payload);
+        Task SendMessage(string type, string payload);
     }
 }

@@ -30,6 +30,7 @@ using SplitwiseAPI.Utility.Helpers;
 using Microsoft.AspNetCore.Identity;
 using SplitwiseAPI.DomainModel.Models;
 using SplitwiseAPI.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace SplitwiseAPI
 {
@@ -136,6 +137,7 @@ namespace SplitwiseAPI
             }));
 
             services.AddSignalR();
+            services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -155,7 +157,7 @@ namespace SplitwiseAPI
 
             app.UseSignalR(options =>
             {
-                options.MapHub<NotifyHub>("/notify");
+                options.MapHub<ChatHub>("/notify");
             });
             app.UseMvc();
         }
