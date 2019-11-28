@@ -22,9 +22,16 @@ namespace SplitwiseAPI.Hubs
             foreach (var receiver in listOfReceivers)
             {
                 ChatHub.setOfIds.TryGetValue(receiver, out string connectionId);
-                await Clients.Client(connectionId).SendAsync("SendMessage", type, message);
+                if(connectionId != null)
+                    await Clients.Client(connectionId).SendAsync("SendMessage", type, message);
             }
             
+        }
+        public void RemoveUser(string userId)
+        {
+            if (ChatHub.setOfIds.ContainsKey(userId))
+                ChatHub.setOfIds.Remove(userId);
+
         }
     }
 }

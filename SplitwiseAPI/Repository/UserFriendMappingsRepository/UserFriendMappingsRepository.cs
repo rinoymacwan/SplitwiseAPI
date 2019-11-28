@@ -25,7 +25,7 @@ namespace SplitwiseAPI.Repository.UserFriendMappingsRepository
             context.UserFriendMappings.Add(userFriendMapping);
             context.UserFriendMappings.Add(otherEntry);
         }
-        public async Task<Boolean> CreateUserFriendMappingByEmail(string id, Users user)
+        public async Task<Users> CreateUserFriendMappingByEmail(string id, Users user)
         {
             string email = user.Email;
             var x = await _usersRepository.GetUserByEmail(email);
@@ -36,11 +36,11 @@ namespace SplitwiseAPI.Repository.UserFriendMappingsRepository
                 // _userFriendMappingsRepository.CreateUserFriendMapping(new UserFriendMappings() { UserId = id, FriendId = x.Id });
                 //  _userFriendMappingsRepository.CreateUserFriendMapping(new UserFriendMappings() { UserId = x.Id, FriendId = id });
                 await SaveAsync();
-                return true;
+                return x;
             }
             else
             {
-                return false;
+                return new Users();
             }
         }
         public async Task DeleteUserFriendMapping(UserFriendMappings UserFriendMapping)
